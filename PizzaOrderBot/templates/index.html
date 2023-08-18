@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OrderBot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        #chatbox {
+            width: 100%;
+            height: 300px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+        }
+
+        #user_input {
+            width: 80%;
+            padding: 5px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 5px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <label for="chatbox">Chat History:</label>
+        <textarea id="chatbox" readonly></textarea>
+        <input type="text" id="user_input" placeholder="Type your message here...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        function sendMessage() {
+            let userMessage = document.getElementById('user_input').value;
+            fetch('/ask', {
+                method: 'POST',
+                body: new URLSearchParams({'user_message': userMessage}),
+            })
+            .then(response => response.json())
+            .then(data => {
+                let chatbox = document.getElementById('chatbox');
+                chatbox.value += "You: " + userMessage + "\n";
+                chatbox.value += "OrderBot: " + data.OrderBot + "\n";
+            });
+            document.getElementById('user_input').value = '';
+        }
+    </script>
+</body>
+</html>
